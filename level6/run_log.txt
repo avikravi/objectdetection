@@ -1,0 +1,9 @@
+warehouse4.jpg -> Total objects detected: 11
+  person: 3
+  safety vest: 1
+  helmet: 2
+  electrical cabinet: 1
+  cardboard box wooden crate: 1
+  hand pallet truck: 2
+  hand pallet truck cardboard box wooden crate: 1
+Saved annotated image as output4.jpg

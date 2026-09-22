@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vehicle Detection — Local Demo</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --panel: #f7f8fa;
+        --border: #e3e6ea;
+        --text: #1c1c1c;
+        --text-soft: #5d6770;
+        --brand: #0096d6;
+        --brand-hover: #0080b8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 40px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--brand);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.02em;
+      }
+
+      header h1 {
+        font-size: 17px;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      header p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-soft);
+      }
+
+      main {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 48px 40px 80px;
+      }
+
+      .intro {
+        margin-bottom: 32px;
+      }
+
+      .intro h2 {
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0 0 6px;
+      }
+
+      .intro p {
+        font-size: 14px;
+        color: var(--text-soft);
+        margin: 0;
+        max-width: 60ch;
+      }
+
+      form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        padding: 16px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+
+      input[type="file"] {
+        flex: 1;
+        font-size: 13px;
+        color: var(--text-soft);
+      }
+
+      button {
+        background: var(--brand);
+        color: #fff;
+        border: none;
+        padding: 9px 20px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+
+      button:hover {
+        background: var(--brand-hover);
+      }
+
+      .panels {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      @media (max-width: 720px) {
+        .panels {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .panel-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-soft);
+      }
+
+      .panel-body {
+        padding: 16px;
+        min-height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel);
+      }
+
+      .panel-body img {
+        max-width: 100%;
+        border-radius: 4px;
+        display: block;
+      }
+
+      .placeholder {
+        font-size: 13px;
+        color: var(--text-soft);
+        text-align: center;
+      }
+
+      .summary {
+        padding: 14px 16px;
+        border-top: 1px solid var(--border);
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        padding: 4px 0;
+      }
+
+      .summary-row span:first-child {
+        color: var(--text-soft);
+        text-transform: capitalize;
+      }
+
+      .summary-row span:last-child {
+        font-weight: 600;
+      }
+
+      .summary-total {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 600;
+        padding-top: 10px;
+        margin-top: 6px;
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="mark">hp</div>
+      <div>
+        <h1>Vehicle Detection Demo</h1>
+        <p>Local object detection — manufacturing &amp; robotics use case</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="intro">
+        <h2>Upload an image</h2>
+        <p>
+          Runs a YOLOv8 model locally to detect and count vehicles in the frame.
+        </p>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required />
+        <button type="submit">Run detection</button>
+      </form>
+
+      <div class="panels">
+        <div class="panel">
+          <div class="panel-header">Original</div>
+          <div class="panel-body">
+            {% if original_image %}
+            <img src="{{ original_image }}" alt="Original upload" />
+            {% else %}
+            <div class="placeholder">No image uploaded yet</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Detected</div>
+          <div class="panel-body">
+            {% if result_image %}
+            <img src="{{ result_image }}" alt="Detection result" />
+            {% else %}
+            <div class="placeholder">Results will appear here</div>
+            {% endif %}
+          </div>
+          {% if detection_summary %}
+          <div class="summary">
+            {% set total = detection_summary.values() | sum %} {% for label,
+            count in detection_summary.items() %}
+            <div class="summary-row">
+              <span>{{ label }}</span>
+              <span>{{ count }}</span>
+            </div>
+            {% endfor %}
+            <div class="summary-total">
+              <span>Total</span>
+              <span>{{ total }}</span>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
